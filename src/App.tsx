@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Guy from "./guy";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface GuyProps {
+  name: string;
+  id: number;
 }
 
-export default App;
+const data: GuyProps[] = [
+  { name: "Alex", id: 0 },
+  { name: "Daniel", id: 1 },
+];
+
+const List: React.FC = () => {
+  const [guys, setGuys] = useState<GuyProps[]>(data);
+
+  const add = (index: number) => () =>
+    setGuys((prevGuys) => {
+      // COPIAR DATOS PREVIOS
+      const copy = [...prevGuys];
+      const defGuy: GuyProps = { name: "", id: copy.length + 1 };
+
+      // INSERTAR Y ACTUALIZAR
+      copy.splice(index + 1, 0, defGuy);
+      return copy;
+    });
+
+  return (
+    <>
+      {guys.map((guy, index) => (
+        <Guy key={guy.id} {...guy} onAdd={add(index)} />
+      ))}
+    </>
+  );
+};
+
+export default List;
